@@ -3,109 +3,125 @@
 
 import os
 import datetime
+import string
 from mutagen.id3 import TIT2, TALB, TPE1, TDRC, TRCK, TPOS, APIC
 from mutagen.mp3 import MP3
 
-diretorio = u'/Volumes/Leminski/Musica/Musica/_A/'
+diretorio = u'/Volumes/Leminski/Musica/_Pronto'
 
-os.system('find ' + diretorio + ' -name .DS_Store -delete');
-os.system('find ' + diretorio + ' -name ._* -delete');
+pronto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z']
+todas = string.ascii_uppercase
 
-dirList = os.listdir(diretorio)
+for letra in pronto:
+    todas = todas.replace(letra,'')
 
-numBandas = len(dirList)
+print todas
+todas = ['D']
 
-strBanda = ''
-strAlbum = ''
-strTitulo = ''
-strTrack = ''
-strTotal = ''
-strAno = ''
-strNumAlbum = ''
-strTotalAlbum = '0'
 
-for banda in dirList:
+for d in todas:
 
-    subDirList = os.listdir(diretorio+banda+'/')
-    numAlbuns = len(subDirList)
+    #diretorio = u'/Volumes/Leminski/Musica/Musica/_'+d+'/'
+    diretorio = u'/Volumes/Leminski/Musica/_Pronto/'
 
-    strBanda = banda
+    os.system('find ' + diretorio + ' -name .DS_Store -delete');
+    os.system('find ' + diretorio + ' -name ._* -delete');
 
-    print '\n================================================================='
-    print 'Banda: ' + strBanda
+    dirList = os.listdir(diretorio)
 
-    for album in subDirList:
+    numBandas = len(dirList)
 
-        subSubDirList = [f for f in os.listdir(diretorio+banda+'/'+album+'/') if f.endswith('.mp3')]
-        numMusicas = len(subSubDirList)
+    strBanda = ''
+    strAlbum = ''
+    strTitulo = ''
+    strTrack = ''
+    strTotal = ''
+    strAno = ''
+    strNumAlbum = ''
+    strTotalAlbum = '0'
 
-        strNumAlbum = '1'
-        strTotalAlbum = '1'
-        aux = album
-        aux2 = aux.split('] ')[0]
-        strAno = aux2[1:]
+    for banda in dirList:
 
-        strAlbum = aux.split('] ')[1]
-        strTotal = str(numMusicas)
-        strTotalLista = {}
+        subDirList = os.listdir(diretorio+banda+'/')
+        numAlbuns = len(subDirList)
 
-        print '\nAlbum: ' + strAlbum + ' - Ano: '+ strAno
+        strBanda = banda
 
-        # Número de discos
-        for musica in subSubDirList:
-            if musica[1] == '-':
-                if musica[0] > strTotalAlbum:
-                    strTotalAlbum = musica[0]
+        print '\n================================================================='
+        print 'Banda: ' + strBanda
 
-        # Número de faixas de cada disco
-        if musica[1] == '-':
+        for album in subDirList:
+
+            subSubDirList = [f for f in os.listdir(diretorio+banda+'/'+album+'/') if f.endswith('.mp3')]
+            numMusicas = len(subSubDirList)
+
+            strNumAlbum = '1'
+            strTotalAlbum = '1'
+            aux = album
+            aux2 = aux.split('] ')[0]
+            strAno = aux2[1:]
+
+            strAlbum = aux.split('] ')[1]
+            strTotal = str(numMusicas)
+            strTotalLista = {}
+
+            print '\nAlbum: ' + strAlbum + ' - Ano: '+ strAno
+
+            # Número de discos
             for musica in subSubDirList:
-                l = musica[0]
-                if l in strTotalLista.keys():
-                    strTotalLista[l] = strTotalLista[l] + 1
-                else:
-                    strTotalLista[l] = 1
+                if musica[1] == '-':
+                    if musica[0] > strTotalAlbum:
+                        strTotalAlbum = musica[0]
 
-        # Capa
-        capaArquivo = ''
-        try:
-            capaArquivo = open(diretorio+banda+'/'+album+'/capa.jpg', 'rb').read()
-        except:
-            pass
-
-        for musica in subSubDirList:
-            strTrack = musica.split(' ', 1)[0]
+            # Número de faixas de cada disco
             if musica[1] == '-':
-                strNumAlbum = musica[0]
-                strTrack = strTrack[2:]
-                strTotal = unicode(strTotalLista[strNumAlbum])
-            aux = musica.split(' ', 1)[1]
-            strTitulo = aux.split('.mp3')[0]
+                for musica in subSubDirList:
+                    l = musica[0]
+                    if l in strTotalLista.keys():
+                        strTotalLista[l] = strTotalLista[l] + 1
+                    else:
+                        strTotalLista[l] = 1
 
-            print strTrack + '/' + strTotal + ' - ' + strNumAlbum + '/' + strTotalAlbum + ' - ' + strTitulo
+            # Capa
+            capaArquivo = ''
+            try:
+                capaArquivo = open(diretorio+banda+'/'+album+'/capa.jpg', 'rb').read()
+            except:
+                pass
 
-            audio = MP3(diretorio+banda+'/'+album+'/'+musica)
+            for musica in subSubDirList:
+                strTrack = musica.split(' ', 1)[0]
+                if musica[1] == '-':
+                    strNumAlbum = musica[0]
+                    strTrack = strTrack[2:]
+                    strTotal = unicode(strTotalLista[strNumAlbum])
+                aux = musica.split(' ', 1)[1]
+                strTitulo = aux.split('.mp3')[0]
 
-            # Se não tem o arquivo capa.jpg, tenta ler a capa do arquivo
-            capaMp3 = ''
-            if not capaArquivo:
-                try:
-                    capaMp3 = audio.tags['APIC:'].data
-                except:
-                    pass
-                if capaMp3:
-                    fcapa = open(diretorio+banda+'/'+album+'/capa.jpg', 'wb')
-                    fcapa.write(capaMp3)
-                    fcapa.close
+                print strTrack + '/' + strTotal + ' - ' + strNumAlbum + '/' + strTotalAlbum + ' - ' + strTitulo
 
-            audio.delete()
-            audio["TIT2"] = TIT2(encoding=3, text=unicode(strTitulo) )
-            audio["TALB"] = TALB(encoding=3, text=unicode(strAlbum) )
-            audio["TPE1"] = TPE1(encoding=3, text=unicode(strBanda) )
-            audio["TDRC"] = TDRC(encoding=3, text=unicode(strAno))
-            audio["TRCK"] = TRCK(encoding=3, text=unicode(strTrack+'/'+strTotal))
-            audio["TPOS"] = TPOS(encoding=3, text=unicode(strNumAlbum+'/'+strTotalAlbum))
-            if capaArquivo or capaMp3:
-                imagedata = capaArquivo or capaMp3
-                audio["APIC"] = APIC(encoding=3, mime='image/jpg', type=3, desc='', data=imagedata)
-            audio.save()
+                audio = MP3(diretorio+banda+'/'+album+'/'+musica)
+
+                # Se não tem o arquivo capa.jpg, tenta ler a capa do arquivo
+                capaMp3 = ''
+                if not capaArquivo:
+                    try:
+                        capaMp3 = audio.tags['APIC:'].data
+                    except:
+                        pass
+                    if capaMp3:
+                        fcapa = open(diretorio+banda+'/'+album+'/capa.jpg', 'wb')
+                        fcapa.write(capaMp3)
+                        fcapa.close
+
+                audio.delete()
+                audio["TIT2"] = TIT2(encoding=3, text=unicode(strTitulo) )
+                audio["TALB"] = TALB(encoding=3, text=unicode(strAlbum) )
+                audio["TPE1"] = TPE1(encoding=3, text=unicode(strBanda) )
+                audio["TDRC"] = TDRC(encoding=3, text=unicode(strAno))
+                audio["TRCK"] = TRCK(encoding=3, text=unicode(strTrack+'/'+strTotal))
+                audio["TPOS"] = TPOS(encoding=3, text=unicode(strNumAlbum+'/'+strTotalAlbum))
+                if capaArquivo or capaMp3:
+                    imagedata = capaArquivo or capaMp3
+                    audio["APIC"] = APIC(encoding=3, mime='image/jpg', type=3, desc='', data=imagedata)
+                audio.save()

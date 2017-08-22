@@ -11,7 +11,7 @@ lista = []
 d = {}
 i = 0
 j = 0
-for root, dirs, files in os.walk("/Users/lflrocha/Livros"):
+for root, dirs, files in os.walk("/Volumes/Leminski/Google Drive/Fotos/_Organizar/Fotos"):
     tamanho = len(files)
     print root, tamanho
     for idx, name in enumerate(files):
@@ -21,8 +21,8 @@ for root, dirs, files in os.walk("/Users/lflrocha/Livros"):
         f.close()
         hash_object = hashlib.md5(c)
         f_hash = hash_object.hexdigest()
-        if f_hash in d.keys():     
-            os.remove(arq)
+        if f_hash in d.keys():
+            #os.remove(arq)
             j = j + 1
         else:
             d[f_hash] = [arq]
@@ -31,7 +31,7 @@ for root, dirs, files in os.walk("/Users/lflrocha/Livros"):
 
 print str(j) + " arquivos removidos."
 
-    
+
 #           f = open(arq)
 #           c = f.read()
 #           f.close()

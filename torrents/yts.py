@@ -10,12 +10,12 @@ def format_filename(s):
     """Take a string and return a valid filename constructed from the string.
 Uses a whitelist approach: any characters not present in valid_chars are
 removed. Also spaces are replaced with underscores.
- 
+
 Note: this method may produce invalid filenames such as ``, `.` or `..`
 When I use this method I prepend a date string like '2009_01_15_19_46_32_'
 and append a file extension like '.txt', so I avoid the potential of using
 an invalid filename.
- 
+
 """
     valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
     filename = ''.join(c for c in s if c in valid_chars)
@@ -43,7 +43,7 @@ baixados = 0
 
 
 
-for a in range(10):
+for a in range(150):
 
     response = requests.get('https://yts.ag/api/v2/list_movies.json?sort_by=date_added&order_by=desc&limit=50&page='+str(a))
     aux = response.text
@@ -52,11 +52,11 @@ for a in range(10):
     if 'data' in page.keys():
 
         data = page['data']
-        
+
         if 'movies' in data.keys():
 
             for filme in data['movies']:
-    
+
                 t1 = filme['title']
         #        t2 = filme['title_long']
         #        t3 = filme['title_english']
@@ -115,7 +115,7 @@ for a in range(10):
 
                         url = url.replace('\/','/')
 
-                        filename = str(t1) + ' - ' + str(t4) + ' - ' + str(quality) + ' - ' +  str(t14)
+                        filename = unicode(str(t1) + ' - ' + str(t4) + ' - ' + str(quality) + ' - ' +  str(t14))
                         filename = slugify(filename) + '.torrent'
                         baixados = baixados + 1
                         contador = contador + 1
@@ -125,21 +125,21 @@ for a in range(10):
 
                         rating = str(int(round(float(t9))))
 
-                        cmd = "wget -q -b " + url + " -O " + rating+'/'+filename
+                        cmd = "curl " + url + " -k -o " + rating+'/'+filename
                         a = os.system(cmd)
                         imdb.write(t14+'\n')
                         if a <> 0:
-                            log.write(contador + '\n')
+                            log.write(str(contador) + '\n')
                             log.write(filename + '\n')
                             log.write(url + '\n')
-                            log.write('====================================\n')   
-                    
+                            log.write('====================================\n')
+
                 else:
                     skipped = skipped + 1
-                    contador = contador + 1     
+                    contador = contador + 1
                     print "====================================================="
                     print 'Pulou', contador, t11, str(t1), str(t4)
                     print tamanho, baixados, skipped
-            
+
 log.close()
 imdb.close()

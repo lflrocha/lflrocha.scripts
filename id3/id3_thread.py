@@ -23,7 +23,7 @@ class AsyncID3(threading.Thread):
         self.strNumAlbum = strNumAlbum
         self.strTotalAlbum = strTotalAlbum
 
-    def run(self):    
+    def run(self):
         audio = MP3(mp3Arquivo)
 
         capaMp3 = ''
@@ -49,8 +49,7 @@ class AsyncID3(threading.Thread):
 
 
 
-
-diretorio = u'/Volumes/LFLR-HD05/Ok/'
+diretorio = u'/Volumes/Leminski/Musica/Musica/_#'
 
 os.system('find ' + diretorio + ' -name .DS_Store -delete');
 os.system('find ' + diretorio + ' -name ._* -delete');
@@ -107,13 +106,13 @@ for banda in dirList:
                 l = musica[0]
                 if l in strTotalLista.keys():
                     strTotalLista[l] = strTotalLista[l] + 1
-                else: 
+                else:
                     strTotalLista[l] = 1
 
         # Capa
         capaArquivo = ''
         try:
-            capaArquivo = open(diretorio+banda+'/'+album+'/capa.jpg', 'rb').read() 
+            capaArquivo = open(diretorio+banda+'/'+album+'/capa.jpg', 'rb').read()
         except:
             pass
 

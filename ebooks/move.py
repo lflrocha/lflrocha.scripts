@@ -1,8 +1,17 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 import os
 
-for f in os.listdir('./PTBR/'):
-    print f
+origem = '/Volumes/Leminski/Livros/'
+destino = '/Volumes/Leminski/Google Drive/Livros/ePub/'
+
+os.system('find ' + origem + ' -name .DS_Store -delete');
+
+
+for f in os.listdir(origem):
+
     inicial = f[0]
-    for j in os.listdir('./PTBR/'+f):
-        print j
-        os.rename('./PTBR/'+f+'/'+j,'../_Literatura/'+inicial+'/'+j)
+    print inicial, origem+f, destino+inicial+'/'+f
+
+    os.rename(origem+f,destino+inicial+'/'+f)
