@@ -7,7 +7,7 @@ import string
 from mutagen.id3 import TIT2, TALB, TPE1, TDRC, TRCK, TPOS, APIC
 from mutagen.mp3 import MP3
 
-diretorio = u'/Volumes/Leminski/Musica/_Pronto'
+diretorio = u'/Volumes/Leminski/Musica/_Pronto/'
 
 pronto = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z']
 todas = string.ascii_uppercase

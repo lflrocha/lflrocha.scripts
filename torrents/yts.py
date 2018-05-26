@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+#ultimo download: 25/03/2018
+
+
 import requests
 import ast
 import urllib
@@ -33,7 +36,7 @@ imdb_codes = [line.strip() for line in imdb]
 
 imdb.close()
 
-imdb = open('imdb.txt','w')
+imdb = open('imdb.txt','a')
 
 contador = 0
 tamanho = 0
@@ -61,7 +64,10 @@ for a in range(150):
         #        t2 = filme['title_long']
         #        t3 = filme['title_english']
                 t4 = filme['year']
-                t5 = filme['genres']
+                if 'genres' in filme.keys():
+                    t5 = filme['genres']
+                else:
+                    t5 = ''
         #        t6 = filme['runtime']
         #        t7 = filme['language']
         #        t8 = filme['mpa_rating']
@@ -84,7 +90,7 @@ for a in range(150):
         #        t25 = filme['url']
         #        t26 = filme['yt_trailer_code']
 
-                if ('Horror' not in t5) and (t14 not in imdb_codes):
+                if (t14 not in imdb_codes):
 
                     tam = ''
                     quality = ''
@@ -115,7 +121,7 @@ for a in range(150):
 
                         url = url.replace('\/','/')
 
-                        filename = unicode(str(t1) + ' - ' + str(t4) + ' - ' + str(quality) + ' - ' +  str(t14))
+                        filename = unicode(str(t4) + ' - ' + str(t1) + ' - ' + str(quality) + ' - ' +  str(t14))
                         filename = slugify(filename) + '.torrent'
                         baixados = baixados + 1
                         contador = contador + 1
@@ -125,7 +131,11 @@ for a in range(150):
 
                         rating = str(int(round(float(t9))))
 
-                        cmd = "curl " + url + " -k -o " + rating+'/'+filename
+                        path = './Nota/' + rating + '/'
+                        if not os.path.exists(path):
+                            os.makedirs(path)
+
+                        cmd = "curl " + url + " -k -o " + "Nota/"+rating+'/'+filename
                         a = os.system(cmd)
                         imdb.write(t14+'\n')
                         if a <> 0:
